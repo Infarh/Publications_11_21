@@ -9,6 +9,9 @@ class Program
 
     public static void Main(string[] args)
     {
+        CriticalSectionTests.Run();
+        return;
+
         var timer_thread = new Thread(() => TimerThread());
         //timer_thread.IsBackground = true;
         timer_thread.Start();
