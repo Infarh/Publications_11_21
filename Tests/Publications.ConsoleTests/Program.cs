@@ -1,1 +1,48 @@
-﻿Console.WriteLine("Hello, World!");
+﻿using System.Threading;
+
+namespace Publications.ConsoleTests;
+
+class Program
+{
+    private static bool __TimerThreadCanWork = true;
+
+    public static void Main(string[] args)
+    {
+
+        var timer_thread = new Thread(() => TimerThread());
+        //timer_thread.IsBackground = true;
+        timer_thread.Start();
+
+
+        Console.WriteLine("Готов!");
+        Console.ReadLine();
+
+        __TimerThreadCanWork = false;
+        //timer_thread.Join();
+        if (timer_thread.Join(200))
+        {
+            Console.WriteLine("Поток часов успешно завершён");
+        }
+        else
+        {
+            Console.WriteLine("Дождаться завершения потока часов не удалось");
+            //timer_thread.Interrupt();   // не безопасно
+            //timer_thread.Abort();     // опасно!
+        }
+
+
+        Console.WriteLine("Основная программа завершена");
+    }
+
+    private static void TimerThread()
+    {
+        while (__TimerThreadCanWork)
+        {
+            Console.Title = DateTime.Now.ToString("HH:mm:ss.fff");
+            Thread.Sleep(100);
+            //Thread.SpinWait(1000);
+        }
+
+        Console.WriteLine("Поток обновления часов завершён");
+    }
+}
