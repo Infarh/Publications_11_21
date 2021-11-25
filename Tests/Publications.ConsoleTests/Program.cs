@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Diagnostics;
 
 namespace Publications.ConsoleTests;
 
@@ -8,14 +9,21 @@ class Program
 
     public static void Main(string[] args)
     {
-
         var timer_thread = new Thread(() => TimerThread());
         //timer_thread.IsBackground = true;
         timer_thread.Start();
 
+        //timer_thread.IsAlive
+        //timer_thread.ThreadState == 
+        timer_thread.Priority = ThreadPriority.Highest;
+        timer_thread.Name = "Поток часов";
+
+        Thread.CurrentThread.Name = "GUI";
 
         Console.WriteLine("Готов!");
         Console.ReadLine();
+
+        //var threads = Process.GetCurrentProcess().Threads;
 
         __TimerThreadCanWork = false;
         //timer_thread.Join();
