@@ -16,8 +16,18 @@ namespace Publications.WPF
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var current_context = SynchronizationContext.Current;
+            var task = TestTask();
+            task.Wait();
+
             var calculation_thread = new Thread(() => UpdateData());
             calculation_thread.Start();
+        }
+
+        private static async Task<int> TestTask()
+        {
+            await Task.Yield();
+            return 42;
         }
 
         private /*async*/ void UpdateData()

@@ -7,9 +7,20 @@ class Program
 {
     private static bool __TimerThreadCanWork = true;
 
+    private static async Task<int> TestTask()
+    {
+        await Task.Yield();
+        return 13;
+    }
+
     public static void Main(string[] args)
     {
-        CriticalSectionTests.Run();
+        var current_context = SynchronizationContext.Current;
+
+        var task = TestTask();
+        task.Wait();
+
+        CriticalSectionTests.Run(); 
         return;
 
         var timer_thread = new Thread(() => TimerThread());
