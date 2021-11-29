@@ -1,70 +1,57 @@
-﻿using System.Threading;
-using System.Diagnostics;
-
-namespace Publications.ConsoleTests;
+﻿namespace Publications.ConsoleTests;
 
 class Program
 {
-    private static bool __TimerThreadCanWork = true;
-
-    private static async Task<int> TestTask()
-    {
-        await Task.Yield();
-        return 13;
-    }
-
     public static void Main(string[] args)
     {
-        var current_context = SynchronizationContext.Current;
+        var list = new List<string>();
 
-        var task = TestTask();
-        task.Wait();
+        var manual_event = new ManualResetEvent(false);
+        var auto_event = new AutoResetEvent(false);
 
-        CriticalSectionTests.Run(); 
-        return;
+        //Mutex mutex = new Mutex(true, "My singleton program", out var is_first);
+        //mutex.ReleaseMutex();
 
-        var timer_thread = new Thread(() => TimerThread());
-        //timer_thread.IsBackground = true;
-        timer_thread.Start();
+        Semaphore semaphore = new Semaphore(3, 3);
 
-        //timer_thread.IsAlive
-        //timer_thread.ThreadState == 
-        timer_thread.Priority = ThreadPriority.Highest;
-        timer_thread.Name = "Поток часов";
 
-        Thread.CurrentThread.Name = "GUI";
+        var threads = new Thread[10];
+        for (var i = 0; i < threads.Length; i++)
+        {
+            threads[i] = new Thread(() =>
+            {
+                var thread_id = Thread.CurrentThread.ManagedThreadId;
+                Console.WriteLine("Поток {0} создан и ждёт разрешения", thread_id);
 
-        Console.WriteLine("Готов!");
+                semaphore.WaitOne();
+
+                //auto_event.WaitOne();
+                Console.WriteLine("Поток {0} запущен", thread_id);
+
+                for (var j = 0; j < 10; j++)
+                {
+                    list.Add($"Thread value {j} ftom thread id: {thread_id}");
+                    Console.WriteLine($"Thread value {j} ftom thread id: {thread_id}");
+                    Thread.Sleep(250);
+                }
+
+                Console.WriteLine("Поток {0} завершён", thread_id);
+
+                semaphore.Release();
+            });
+
+            threads[i].Start();
+        }
+
+        Console.WriteLine("Все потоки запущены и готовы к работе");
         Console.ReadLine();
 
-        //var threads = Process.GetCurrentProcess().Threads;
+        auto_event.Set();
+        Console.WriteLine("Потокам разрешено выполнить работу");
 
-        __TimerThreadCanWork = false;
-        //timer_thread.Join();
-        if (timer_thread.Join(200))
-        {
-            Console.WriteLine("Поток часов успешно завершён");
-        }
-        else
-        {
-            Console.WriteLine("Дождаться завершения потока часов не удалось");
-            //timer_thread.Interrupt();   // не безопасно
-            //timer_thread.Abort();     // опасно!
-        }
+        Console.ReadLine();
+        auto_event.Set();
 
-
-        Console.WriteLine("Основная программа завершена");
-    }
-
-    private static void TimerThread()
-    {
-        while (__TimerThreadCanWork)
-        {
-            Console.Title = DateTime.Now.ToString("HH:mm:ss.fff");
-            Thread.Sleep(100);
-            //Thread.SpinWait(1000);
-        }
-
-        Console.WriteLine("Поток обновления часов завершён");
+        Console.ReadLine();
     }
 }
