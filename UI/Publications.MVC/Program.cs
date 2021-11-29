@@ -12,6 +12,9 @@ var app = builder.Build();
 using(var scope = app.Services.CreateAsyncScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<PublicationsDB>();
+
+    await db.Database.MigrateAsync(); // Создание БД в случае её отсутствия и приведение её к последнему состоянию в плане миграций
+
     //var publications = await db.Publications.ToArrayAsync();
     var id = 5;
     var some_publication = await db.Publications.FirstOrDefaultAsync(p => p.Id == id);
