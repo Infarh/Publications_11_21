@@ -10,6 +10,12 @@
         <TextBlock Text="Реузльтат" Name="ResultTextBlock"
                    Margin="0,72,0,0" VerticalAlignment="Top" HorizontalAlignment="Center"/>
         <Button Content="Start" VerticalAlignment="Center" HorizontalAlignment="Center"
-                Padding="50,20" Click="Button_Click"/>
+                Padding="50,20" Click="Button_Start_Click"/>
+
+        <Button Content="Cancel" VerticalAlignment="Top" HorizontalAlignment="Center"
+                Padding="50,20" Click="Button_Cancel_Click" Margin="0,322,0,0"/>
+
+        <ProgressBar VerticalAlignment="Bottom" Height="20" Margin="20"
+                     Name="OperationProgress"/>
     </Grid>
 </Window>
