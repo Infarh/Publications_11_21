@@ -9,6 +9,14 @@ builder.Services.AddDbContext<PublicationsDB>(opt => opt
 
 var app = builder.Build();
 
+using(var scope = app.Services.CreateAsyncScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<PublicationsDB>();
+    //var publications = await db.Publications.ToArrayAsync();
+    var id = 5;
+    var some_publication = await db.Publications.FirstOrDefaultAsync(p => p.Id == id);
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
