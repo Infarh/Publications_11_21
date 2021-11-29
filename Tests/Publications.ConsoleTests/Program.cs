@@ -2,56 +2,67 @@
 
 class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
-        var list = new List<string>();
+        //    //ThreadPool.SetMaxThreads(10, 10);
 
-        var manual_event = new ManualResetEvent(false);
-        var auto_event = new AutoResetEvent(false);
+        var messages = Enumerable.Range(1, 100).Select(i => $"Message {i}").ToArray();
 
-        //Mutex mutex = new Mutex(true, "My singleton program", out var is_first);
-        //mutex.ReleaseMutex();
+        //    foreach (var msg in messages)
+        //    {
+        //        ThreadPool.QueueUserWorkItem(parameter =>
+        //        {
+        //            Thread.Sleep(1000);
+        //            Console.WriteLine("Message processed: {0}", msg);
+        //        });
+        //    }
 
-        Semaphore semaphore = new Semaphore(3, 3);
+        //    Console.ReadLine();
+
+        //var task = new Task(() => TaskAction("Hello World!"));
+        //task.Start();
+        //task.Wait();
 
 
-        var threads = new Thread[10];
-        for (var i = 0; i < threads.Length; i++)
+        var task = Task.Run(() => TaskAction("Hello World!"));
+        var wait_task = task.ContinueWith(t => Console.WriteLine("Задача id:{0} завершилась с результатом", task.Id, task.Result));
+        //var result = task.Result;
+        //var error = task.Exception;
+
+        var result = await task.ConfigureAwait(true);
+
+        await wait_task.ConfigureAwait(true);
+
+        //TaskActionAsync("123").Wait();
+    }
+
+    private static int TaskAction(string Message)
+    {
+        for (var i = 0; i < 10; i++)
         {
-            threads[i] = new Thread(() =>
-            {
-                var thread_id = Thread.CurrentThread.ManagedThreadId;
-                Console.WriteLine("Поток {0} создан и ждёт разрешения", thread_id);
+            Console.WriteLine("Message: {0}", Message);
 
-                semaphore.WaitOne();
-
-                //auto_event.WaitOne();
-                Console.WriteLine("Поток {0} запущен", thread_id);
-
-                for (var j = 0; j < 10; j++)
-                {
-                    list.Add($"Thread value {j} ftom thread id: {thread_id}");
-                    Console.WriteLine($"Thread value {j} ftom thread id: {thread_id}");
-                    Thread.Sleep(250);
-                }
-
-                Console.WriteLine("Поток {0} завершён", thread_id);
-
-                semaphore.Release();
-            });
-
-            threads[i].Start();
+            Thread.Sleep(250);
         }
 
-        Console.WriteLine("Все потоки запущены и готовы к работе");
-        Console.ReadLine();
+        return Message.Length;
+    }
 
-        auto_event.Set();
-        Console.WriteLine("Потокам разрешено выполнить работу");
+    private static async Task<int> TaskActionAsync(string Message)
+    {
+        await Task.Yield();
 
-        Console.ReadLine();
-        auto_event.Set();
+        for (var i = 0; i < 10; i++)
+        {
+            //await Task.Yield();
 
-        Console.ReadLine();
+
+            Console.WriteLine("Message: {0}", Message);
+
+            //Thread.Sleep(250);
+            await Task.Delay(250).ConfigureAwait(false);
+        }
+
+        return Message.Length;
     }
 }
