@@ -116,4 +116,36 @@ class Program
 
         processor.Process(3.1415926535897932);
     }
+
+    private static async Task<int> LongCalculation(int IterationsCount, int Timeout, CancellationToken Cancel = default)
+    {
+        //await Task.Delay(1).ConfigureAwait(false);
+        //await Task.CompletedTask.ConfigureAwait(false);
+        //await Task.Run(() => { }).ConfigureAwait(false);
+
+        await Task.Yield().ConfigureAwait(false);
+
+        //return await Task.Run(async () =>
+        //{
+        //    var result = 0;
+        //    for (var i = 1; i < IterationsCount; i++)
+        //    {
+        //        Cancel.ThrowIfCancellationRequested();
+        //        result += i;
+        //        await Task.Delay(Timeout).ConfigureAwait(false);
+        //    }
+
+        //    return result;
+        //});
+
+        var result = 0;
+        for (var i = 1; i < IterationsCount; i++)
+        {
+            Cancel.ThrowIfCancellationRequested();
+            result += i;
+            await Task.Delay(Timeout).ConfigureAwait(false);
+        }
+
+        return result;
+    }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Diagnostics;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace Publications.WPF
 {
@@ -17,6 +18,49 @@ namespace Publications.WPF
         }
 
         private CancellationTokenSource _OperationCancellation;
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var thread_id_start = Thread.CurrentThread.ManagedThreadId;
+
+            // Thread id == 1 - GUI
+            // работа с интерфейсом
+
+            Title = "Start Action";
+
+            IProgress<double> progress = new Progress<double>(p => OperationProgress.Value = p * 100);
+
+            await Task.Yield().ConfigureAwait(false);
+
+            var thread_id_work = Thread.CurrentThread.ManagedThreadId;
+
+            const int iterations_count = 100;
+            for(var i = 0; i < iterations_count; i++)
+            {
+                await Task.Delay(100);
+                progress.Report((double)i / iterations_count);
+            }
+
+           // Title = "Work Action";
+
+
+            // Thread из ThreadPool - id != 1
+
+            // сложные операции - на пример чтение файла
+
+            await Dispatcher;
+
+            OperationProgress.Value = 0;
+
+            var thread_id_end = Thread.CurrentThread.ManagedThreadId;
+
+            Title = "Action completed";
+
+
+            // Thread id == 1 - GUI
+            // работа с интерфейсом
+
+        }
 
         private async void Button_Start_Click(object sender, RoutedEventArgs e)
         {
