@@ -1,68 +1,110 @@
-﻿namespace Publications.ConsoleTests;
+﻿using System.Diagnostics;
+
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Publications.ConsoleTests;
+
+interface IPrinter
+{
+    void Print(string str);
+}
+
+enum PrinterType
+{
+    Console,
+    Debug,
+    Trace
+}
+
+abstract class Printer : IPrinter
+{
+    private static readonly Dictionary<PrinterType, Printer> __Printers = new();
+
+    public static Printer Cerate(PrinterType type)
+    {
+        if (__Printers.TryGetValue(type, out var printer))
+            return printer;
+
+        switch (type)
+        {
+            default: throw new ArgumentOutOfRangeException(nameof(type));
+
+            case PrinterType.Console:
+                printer = new ConsolePrinter();
+                break;
+
+            case PrinterType.Debug:
+                printer = new DebugPrinter();
+                break;
+
+            case PrinterType.Trace:
+                printer = new TracePrinter();
+                break;
+
+        }
+
+        __Printers[type] = printer;
+        return printer;
+    }
+
+    public abstract void Print(string msg);
+}
+
+class DebugPrinter : Printer
+{
+    public override void Print(string msg) => Debug.WriteLine("{0:yyyy-MM-dd HH-mm-ss.ffff}> {1}", DateTime.Now, msg);
+}
+
+class TracePrinter : Printer
+{
+    public override void Print(string msg) => Trace.Write($"{DateTime.Now:yyyy-MM-dd HH-mm-ss.ffff}> {msg}");
+}
+
+class ConsolePrinter : Printer
+{
+    public override void Print(string msg) => Console.WriteLine("{0:yyyy-MM-dd HH-mm-ss.ffff}> {1}", DateTime.Now, msg);
+}
+
+interface IDataProcessor
+{
+    void Process(double value);
+}
+
+class SimpleValueProcessor : IDataProcessor
+{
+    private readonly IPrinter _Printer;
+
+    public SimpleValueProcessor(IPrinter Printer)
+    {
+        _Printer = Printer;
+    }
+
+    public void Process(double value)
+    {
+        _Printer.Print(value.ToString());
+    }
+
+}
 
 class Program
 {
     public static async Task Main(string[] args)
     {
-        //    //ThreadPool.SetMaxThreads(10, 10);
+        var console_printer = Printer.Cerate(PrinterType.Console);
+        var debug_printer = Printer.Cerate(PrinterType.Debug);
+        var trace_printer = Printer.Cerate(PrinterType.Trace);
 
-        var messages = Enumerable.Range(1, 100).Select(i => $"Message {i}").ToArray();
+        var services = new ServiceCollection();
+        services.AddSingleton<IPrinter, ConsolePrinter>();
+        services.AddScoped<IDataProcessor, SimpleValueProcessor>();
 
-        //    foreach (var msg in messages)
-        //    {
-        //        ThreadPool.QueueUserWorkItem(parameter =>
-        //        {
-        //            Thread.Sleep(1000);
-        //            Console.WriteLine("Message processed: {0}", msg);
-        //        });
-        //    }
+        IServiceProvider provider = services.BuildServiceProvider();
+        IServiceProvider provider2 = services.BuildServiceProvider();
 
-        //    Console.ReadLine();
+        var is_different = !ReferenceEquals(provider, provider2);
 
-        //var task = new Task(() => TaskAction("Hello World!"));
-        //task.Start();
-        //task.Wait();
+        var processor = provider.GetRequiredService<IDataProcessor>();
 
-
-        var task = Task.Run(() => TaskAction("Hello World!"));
-        var wait_task = task.ContinueWith(t => Console.WriteLine("Задача id:{0} завершилась с результатом", task.Id, task.Result));
-        //var result = task.Result;
-        //var error = task.Exception;
-
-        var result = await task.ConfigureAwait(true);
-
-        await wait_task.ConfigureAwait(true);
-
-        //TaskActionAsync("123").Wait();
-    }
-
-    private static int TaskAction(string Message)
-    {
-        for (var i = 0; i < 10; i++)
-        {
-            Console.WriteLine("Message: {0}", Message);
-
-            Thread.Sleep(250);
-        }
-
-        return Message.Length;
-    }
-
-    private static async Task<int> TaskActionAsync(string Message)
-    {
-        await Task.Yield();
-
-        for (var i = 0; i < 10; i++)
-        {
-            //await Task.Yield();
-
-
-            Console.WriteLine("Message: {0}", Message);
-
-            //Thread.Sleep(250);
-            await Task.Delay(250).ConfigureAwait(false);
-        }
-
-        return Message.Length;
+        processor.Process(3.1415926535897932);
     }
 }
