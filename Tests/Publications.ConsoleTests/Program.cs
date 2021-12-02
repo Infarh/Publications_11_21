@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +10,7 @@ interface IPrinter
     void Print(string str);
 }
 
-enum PrinterType
+enum PrinterType : byte
 {
     Console,
     Debug,
@@ -18,34 +19,42 @@ enum PrinterType
 
 abstract class Printer : IPrinter
 {
-    private static readonly Dictionary<PrinterType, Printer> __Printers = new();
+    private static readonly ConcurrentDictionary<PrinterType, Printer> __Printers = new();
 
-    public static Printer Cerate(PrinterType type)
+    //public static Printer Cerate(PrinterType type)
+    //{
+    //    if (__Printers.TryGetValue(type, out var printer))
+    //        return printer;
+
+    //    switch (type)
+    //    {
+    //        default: throw new ArgumentOutOfRangeException(nameof(type));
+
+    //        case PrinterType.Console:
+    //            printer = new ConsolePrinter();
+    //            break;
+
+    //        case PrinterType.Debug:
+    //            printer = new DebugPrinter();
+    //            break;
+
+    //        case PrinterType.Trace:
+    //            printer = new TracePrinter();
+    //            break;
+
+    //    }
+
+    //    __Printers[type] = printer;
+    //    return printer;
+    //}
+
+    public static Printer Cerate(PrinterType type) => __Printers.GetOrAdd(type, t => t switch
     {
-        if (__Printers.TryGetValue(type, out var printer))
-            return printer;
-
-        switch (type)
-        {
-            default: throw new ArgumentOutOfRangeException(nameof(type));
-
-            case PrinterType.Console:
-                printer = new ConsolePrinter();
-                break;
-
-            case PrinterType.Debug:
-                printer = new DebugPrinter();
-                break;
-
-            case PrinterType.Trace:
-                printer = new TracePrinter();
-                break;
-
-        }
-
-        __Printers[type] = printer;
-        return printer;
-    }
+        PrinterType.Console => new ConsolePrinter(),
+        PrinterType.Debug => new DebugPrinter(),
+        PrinterType.Trace => new TracePrinter(),
+        _ => throw new ArgumentOutOfRangeException(nameof(type))
+    });
 
     public abstract void Print(string msg);
 }
