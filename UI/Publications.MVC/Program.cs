@@ -1,11 +1,53 @@
+using Microsoft.AspNetCore.Identity;
 using Publications.DAL.Context;
 using Microsoft.EntityFrameworkCore;
+using Publications.Domain.Entities.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<PublicationsDB>(opt => opt
+var services = builder.Services;
+services.AddControllersWithViews();
+services.AddDbContext<PublicationsDB>(opt => opt
     .UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+
+services.AddIdentity<User, Role>()
+   .AddEntityFrameworkStores<PublicationsDB>()
+   .AddDefaultTokenProviders();
+
+services.Configure<IdentityOptions>(opt =>
+{
+#if DEBUG
+    opt.Password.RequireDigit = false;
+    opt.Password.RequireLowercase = false;
+    opt.Password.RequireUppercase = false;
+    opt.Password.RequireNonAlphanumeric = false;
+    opt.Password.RequiredLength = 3;
+    opt.Password.RequiredUniqueChars = 3;
+#endif
+
+    opt.User.RequireUniqueEmail = false;
+    opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ1234567890";
+
+    opt.Lockout.AllowedForNewUsers = false;
+    opt.Lockout.MaxFailedAccessAttempts = 10;
+    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+});
+
+services.ConfigureApplicationCookie(opt =>
+{
+    opt.Cookie.Name = "Publications";
+
+    opt.Cookie.HttpOnly = true;
+
+    opt.ExpireTimeSpan = TimeSpan.FromDays(10);
+
+    opt.LoginPath = "/Account/Login";
+    opt.LogoutPath = "/Account/Logout";
+    opt.AccessDeniedPath = "/Account/AccessDenied";
+
+    opt.SlidingExpiration = true;
+});
 
 var app = builder.Build();
 
@@ -30,6 +72,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseAuthorization();
 
