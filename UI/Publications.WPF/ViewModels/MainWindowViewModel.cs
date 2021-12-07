@@ -24,9 +24,10 @@ public class MainWindowViewModel : ViewModel
 
     #region ShowMessageCommand - отображение диалога с пользователем
 
-    private Command? _ShowMessageCommand;
+    private ICommand? _ShowMessageCommand;
 
-    public ICommand ShowMessageCommand => _ShowMessageCommand ??= new LambdaCommand(OnShowMessageCommandExecuted, CanShowMessageCommandExecute);
+    //public ICommand ShowMessageCommand => _ShowMessageCommand ??= new LambdaCommand(OnShowMessageCommandExecuted, CanShowMessageCommandExecute);
+    public ICommand ShowMessageCommand => _ShowMessageCommand ??= Command.New(OnShowMessageCommandExecuted, CanShowMessageCommandExecute);
 
     private static bool CanShowMessageCommandExecute(object? parameter) => parameter switch
     {
@@ -41,6 +42,19 @@ public class MainWindowViewModel : ViewModel
         var message = value as string ?? value.ToString();
 
         MessageBox.Show(message, "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    #endregion
+
+    #region CloseMainWindowCommand - команда закрытия главного окна
+
+    private ICommand? _CloseMainWindowCommand;
+
+    public ICommand CloseMainWindowCommand => _CloseMainWindowCommand ??= Command.New(OnCloseMainWindowCommandExecuted);
+
+    private static void OnCloseMainWindowCommandExecuted()
+    {
+        Application.Current.MainWindow?.Close();
     }
 
     #endregion

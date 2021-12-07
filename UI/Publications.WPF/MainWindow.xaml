@@ -10,12 +10,22 @@
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
-    <Grid>
-        <TextBox VerticalAlignment="Top" Margin="50"
-                 Text="{Binding MessageText, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button VerticalAlignment="Center" HorizontalAlignment="Center"
-                Padding="120,30" Content="Сообщение"
-                Command="{Binding ShowMessageCommand}"
-                CommandParameter="{Binding MessageText}"/>
-    </Grid>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Выход" Command="{Binding CloseMainWindowCommand}"/>
+            </MenuItem>
+        </Menu>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem Content="К бою готов!"/>
+        </StatusBar>
+        <Grid>
+            <TextBox VerticalAlignment="Top" Margin="50"
+                     Text="{Binding MessageText, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button VerticalAlignment="Center" HorizontalAlignment="Center"
+                    Padding="120,30" Content="Сообщение"
+                    Command="{Binding ShowMessageCommand}"
+                    CommandParameter="{Binding MessageText}"/>
+        </Grid>
+    </DockPanel>
 </Window>
