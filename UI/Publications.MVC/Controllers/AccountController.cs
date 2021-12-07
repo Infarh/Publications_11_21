@@ -26,7 +26,31 @@ namespace Publications.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterUserViewModel Model)
         {
-            return RedirectToAction("Index", "Home");
+            if (!ModelState.IsValid) return View(Model);
+
+            var user = new User
+            {
+                UserName = Model.UserName
+            };
+
+            var creation_result = await _UserManager.CreateAsync(user, Model.Password);
+
+            if (creation_result.Succeeded)
+            {
+                //await _UserManager.AddToRoleAsync(user, "User");
+
+                await _SignInManager.SignInAsync(user, false);
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            foreach (var error in creation_result.Errors)
+                ModelState.AddModelError("", error.Description);
+
+            _Logger.LogWarning("Ошибка регистрации нового пользователя {0}", 
+                string.Join(",", creation_result.Errors.Select(e => e.Description)));
+
+            return View(Model);
         }
 
         public IActionResult Login(string ReturnUrl) => View(new LoginViewModel { ReturnUrl = ReturnUrl });
@@ -34,9 +58,29 @@ namespace Publications.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel Model)
         {
-            return RedirectToAction("Index", "Home");
+            if (!ModelState.IsValid) return View(Model);
+
+            var login_result = await _SignInManager.PasswordSignInAsync(
+                Model.UserName,
+                Model.Password,
+                Model.RememberMe,
+                false);
+
+            if (login_result.Succeeded)
+            {
+                return LocalRedirect(Model.ReturnUrl ?? "/");
+            }
+
+            ModelState.AddModelError("", "Ошибка ввода имени пользователя или пароля");
+
+            return View(Model);
         }
 
-        public IActionResult Logout() => RedirectToAction("Index", "Home");
+        public async Task<IActionResult> Logout()
+        {
+            await _SignInManager.SignOutAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
