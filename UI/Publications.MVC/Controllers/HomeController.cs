@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Publications.DAL;
+using Publications.DAL.Context;
+using Publications.Domain.Entities;
 using Publications.MVC.Models;
 
 namespace Publications.MVC.Controllers;
@@ -10,8 +13,17 @@ public class HomeController : Controller
 
     public HomeController(ILogger<HomeController> Logger) => _Logger = Logger;
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index(/*[FromServices] IUnitOfWork Work, [FromServices] PublicationsDB db*/)
     {
+        //using (var transaction = await Work.BeginTransaction())
+        //{
+        //    db.Persons.Add(new Person { });
+
+        //    await Work.SaveChanges();
+
+        //    await Work.CommitTransaction();
+        //}
+
         return View();
     }
 

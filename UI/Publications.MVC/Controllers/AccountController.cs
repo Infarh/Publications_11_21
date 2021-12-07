@@ -16,6 +16,16 @@ namespace Publications.MVC.Controllers
             SignInManager<User> SignInManager, 
             ILogger<AccountController> Logger)
         {
+            IUserStore<User> user_store;
+            IRoleStore<Role> role_store;
+            IUserPasswordStore<User> user_password_store;
+            IUserPhoneNumberStore<User> user_phone_store;
+            IUserEmailStore<User> user_email_store;
+            IUserClaimStore<User> user_claim_store;
+            IUserLoginStore<User> user_logins;
+            IUserLockoutStore<User> user_lockouts;
+            IPasswordHasher<User> hasher;
+
             _UserManager = UserManager;
             _SignInManager = SignInManager;
             _Logger = Logger;

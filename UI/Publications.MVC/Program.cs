@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Publications.DAL.Context;
 using Microsoft.EntityFrameworkCore;
+using Publications.DAL;
 using Publications.Domain.Entities.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,10 +10,10 @@ var services = builder.Services;
 services.AddControllersWithViews();
 services.AddDbContext<PublicationsDB>(opt => opt
     .UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-
+services.AddTransient<IUnitOfWork, EFUnitOfWork<PublicationsDB>>();
 
 services.AddIdentity<User, Role>()
-   .AddEntityFrameworkStores<PublicationsDB>()
+    .AddEntityFrameworkStores<PublicationsDB>()
    .AddDefaultTokenProviders();
 
 services.Configure<IdentityOptions>(opt =>
