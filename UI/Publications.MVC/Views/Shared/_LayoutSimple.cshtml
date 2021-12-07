@@ -10,15 +10,7 @@
     @await RenderSectionAsync("Styles", false)
 </head>
 <body>
-    @await Html.PartialAsync("Partial/_Header")
-    
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    @await Html.PartialAsync("Partial/_Footer")
+    @RenderBody()
     
     @await Html.PartialAsync("Partial/_Scripts")
 

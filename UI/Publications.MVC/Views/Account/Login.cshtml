@@ -1,0 +1,40 @@
+﻿@model LoginViewModel
+
+@{
+    ViewBag.Title = "Вход в систему";
+    Layout = "_LayoutSimple";
+}
+
+<div class="form-signin">
+    <form asp-action="Login" asp-route-ReturnUrl="@Model?.ReturnUrl">
+        <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">Вход в систему</h1>
+        
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-floating">
+            <input asp-for="UserName" class="form-control" placeholder="Login">
+            <label asp-for="UserName"></label>
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        
+        <div class="form-floating">
+            <input asp-for="Password" class="form-control" placeholder="Password">
+            <label asp-for="Password"></label>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input asp-for="RememberMe"> Remember me
+            </label>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
+    </form>
+</div>
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/SignInForm.css" asp-append-version="true" />
+}
