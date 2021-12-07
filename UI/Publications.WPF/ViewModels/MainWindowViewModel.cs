@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using Publications.WPF.Commands;
 using Publications.WPF.Commands.Base;
@@ -24,10 +26,14 @@ public class MainWindowViewModel : ViewModel
 
     #region ShowMessageCommand - отображение диалога с пользователем
 
-    private ICommand? _ShowMessageCommand;
+    private Command? _ShowMessageCommand;
 
     //public ICommand ShowMessageCommand => _ShowMessageCommand ??= new LambdaCommand(OnShowMessageCommandExecuted, CanShowMessageCommandExecute);
-    public ICommand ShowMessageCommand => _ShowMessageCommand ??= Command.New(OnShowMessageCommandExecuted, CanShowMessageCommandExecute);
+    //public ICommand ShowMessageCommand => _ShowMessageCommand ??= Command.New(OnShowMessageCommandExecuted, CanShowMessageCommandExecute);
+    public ICommand ShowMessageCommand => _ShowMessageCommand ??= Command
+       .Invoke(OnShowMessageCommandExecuted)
+       .When(CanShowMessageCommandExecute)
+       .Debug();
 
     private static bool CanShowMessageCommandExecute(object? parameter) => parameter switch
     {
@@ -48,14 +54,22 @@ public class MainWindowViewModel : ViewModel
 
     #region CloseMainWindowCommand - команда закрытия главного окна
 
-    private ICommand? _CloseMainWindowCommand;
+    private Command? _CloseMainWindowCommand;
 
-    public ICommand CloseMainWindowCommand => _CloseMainWindowCommand ??= Command.New(OnCloseMainWindowCommandExecuted);
+    //public ICommand CloseMainWindowCommand => _CloseMainWindowCommand ??= Command.New(OnCloseMainWindowCommandExecuted);
+    public ICommand CloseMainWindowCommand => _CloseMainWindowCommand ??= Command
+       .Invoke(OnCloseMainWindowCommandExecuted)
+       .Invoke(p => MessageBox.Show("Было приятно с Вами работать!"))
+       .When(p => p is null);
 
-    private static void OnCloseMainWindowCommandExecuted()
+    private static void OnCloseMainWindowCommandExecuted(object? p)
     {
         Application.Current.MainWindow?.Close();
     }
 
     #endregion
+
+    private ObservableCollection<string> _Items = new();
+
+    public ICollection<string> Items => _Items;
 }
