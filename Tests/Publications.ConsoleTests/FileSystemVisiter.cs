@@ -2,7 +2,7 @@
 
 internal class FileSystemVisiter
 {
-    public int Visit(FileSystemInfo info)
+    public int CountSourceCodeLines(FileSystemInfo info)
     {
         Console.WriteLine(info.FullName);
 
@@ -13,7 +13,7 @@ internal class FileSystemVisiter
 
                 foreach (var dir_info in dir.EnumerateFileSystemInfos())
                 {
-                    lines_count += Visit(dir_info);
+                    lines_count += CountSourceCodeLines(dir_info);
                 }
 
                 break;
@@ -29,5 +29,28 @@ internal class FileSystemVisiter
         }
 
         return lines_count;
+    }
+
+    public List<FileInfo> GetSourceFiles(FileSystemInfo info)
+    {
+        var result = new List<FileInfo>();
+
+        switch (info)
+        {
+            case DirectoryInfo dir:
+
+                foreach (var dir_info in dir.EnumerateFileSystemInfos())
+                {
+                    result.AddRange(GetSourceFiles(dir_info));
+                }
+
+                break;
+
+            case FileInfo { Extension: ".cs" } file:
+                result.Add(file);
+                break;
+        }
+
+        return result;
     }
 }
