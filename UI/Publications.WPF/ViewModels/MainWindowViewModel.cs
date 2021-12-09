@@ -48,6 +48,8 @@ public class MainWindowViewModel : ViewModel
         var message = value as string ?? value.ToString();
 
         MessageBox.Show(message, "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+
+        //OnPropertyChanged();
     }
 
     #endregion
