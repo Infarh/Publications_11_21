@@ -3,11 +3,13 @@ using Publications.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Publications.DAL;
 using Publications.Domain.Entities.Identity;
+using Publications.MVC.Infrastructure.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
-services.AddControllersWithViews();
+services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
 services.AddDbContext<PublicationsDB>(opt => opt
     .UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 services.AddTransient<IUnitOfWork, EFUnitOfWork<PublicationsDB>>();
@@ -67,20 +69,22 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+    app.UseBrowserLink();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseMiddleware<TestMiddleware>();
+
+//app.UseHttpsRedirection();
+app.UseStaticFiles(/*new StaticFileOptions{ ServeUnknownFileTypes = true }*/);
 
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+//app.MapRazorPages();
 
 app.Run();

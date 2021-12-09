@@ -24,6 +24,8 @@ public class HomeController : Controller
         //    await Work.CommitTransaction();
         //}
 
+        ViewBag.Value = "Hello World!";
+
         return View();
     }
 
