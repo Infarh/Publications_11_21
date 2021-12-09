@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Publications.Domain\Publications.Domain.csproj" />
+    <ProjectReference Include="..\..\Services\Publications.Interfaces\Publications.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>
