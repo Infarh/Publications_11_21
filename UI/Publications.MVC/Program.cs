@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Publications.DAL.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Publications.DAL;
 using Publications.DAL.Repositories;
 using Publications.Domain.Entities;
@@ -56,9 +57,12 @@ services.ConfigureApplicationCookie(opt =>
     opt.SlidingExpiration = true;
 });
 
+//services.AddEndpointsApiExplorer();
+//services.AddSwaggerGen();
+
 var app = builder.Build();
 
-using(var scope = app.Services.CreateAsyncScope())
+using (var scope = app.Services.CreateAsyncScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<PublicationsDB>();
 
@@ -97,6 +101,9 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
     app.UseBrowserLink();
+
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
 }
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
