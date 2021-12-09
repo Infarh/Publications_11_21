@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Publications.DAL.Context;
-using Publications.Interfaces.Entities;
+using Publications.Domain.Entities.Base;
 using Publications.Interfaces.Repositories;
 
 namespace Publications.DAL.Repositories;
@@ -24,7 +24,7 @@ public class DbRepository<T> : IRepository<T> where T : class, IEntity
 
     public async Task<T?> GetAsync(int id, CancellationToken Cancel = default)
     {
-        return await Set.FindAsync(id, Cancel).ConfigureAwait(false);
+        return await Set.FirstOrDefaultAsync(item => item.Id == id, Cancel).ConfigureAwait(false);
     }
 
     public async Task<int> AddAsync(T item, CancellationToken Cancel = default)

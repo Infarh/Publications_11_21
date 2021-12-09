@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Publications.DAL;
 using Publications.DAL.Context;
 using Publications.Domain.Entities;
+using Publications.Interfaces.Repositories;
 using Publications.MVC.Models;
 
 namespace Publications.MVC.Controllers;
@@ -33,5 +34,20 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    public async Task<IActionResult> Publications([FromServices] IRepository<Publication> Publications)
+    {
+        var publications = await Publications.GetAllAsync();
+
+        return View(publications);
+    }
+
+    public async Task<IActionResult> PublicationInfo(int id, [FromServices] IRepository<Publication> Publications)
+    {
+        var publication = await Publications.GetAsync(id);
+        if (publication is null)
+            return NotFound();
+        return View(publication);
     }
 }

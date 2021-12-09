@@ -1,4 +1,4 @@
-﻿using Publications.Interfaces.Entities;
+﻿using Publications.Domain.Entities.Base;
 
 namespace Publications.Interfaces.Repositories;
 

@@ -1,0 +1,11 @@
+﻿@model Publications.Domain.Entities.Publication
+
+@{
+    ViewBag.Title = $"Публикация id:{Model.Id}";
+}
+
+<dl class="table">
+    <dt>Id:</dt><dd>@Model.Id</dd>
+    <dt>Название:</dt><dd>@Model.Name</dd>
+    <dt>Дата:</dt><dd>@Model.Date.ToShortDateString()</dd>
+</dl>
