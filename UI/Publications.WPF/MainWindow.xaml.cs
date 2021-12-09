@@ -8,13 +8,12 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace Publications.WPF
+namespace Publications.WPF;
+
+public partial class MainWindow
 {
-    public partial class MainWindow
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

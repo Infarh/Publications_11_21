@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 
 using Publications.Domain.Entities.Base;
 
-namespace Publications.Domain.Entities
+namespace Publications.Domain.Entities;
+
+public class Publication : NamedEntity
 {
-    public class Publication : NamedEntity
-    {
-        public DateTime Date { get; set; }
+    public DateTime Date { get; set; }
 
-        public ICollection<Person> Authors { get; set; } = new HashSet<Person>();
-    }
+    public ICollection<Person> Authors { get; set; } = new HashSet<Person>();
+}
 
-    public class Person : NamedEntity
-    {
-        public string LastName { get; set; }
+public class Person : NamedEntity
+{
+    public string LastName { get; set; }
 
-        public string Patronymic { get; set; }
-    }
+    public string Patronymic { get; set; }
 }
