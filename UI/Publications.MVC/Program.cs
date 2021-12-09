@@ -72,7 +72,7 @@ if (!app.Environment.IsDevelopment())
     app.UseBrowserLink();
 }
 
-app.UseMiddleware<TestMiddleware>();
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 //app.UseHttpsRedirection();
 app.UseStaticFiles(/*new StaticFileOptions{ ServeUnknownFileTypes = true }*/);

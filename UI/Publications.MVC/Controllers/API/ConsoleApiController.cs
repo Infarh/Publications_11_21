@@ -11,5 +11,8 @@ namespace Publications.MVC.Controllers.API
 
         [HttpGet("WriteLine/{Message}")]
         public void WriteLine(string Message) => Console.WriteLine(Message);
+
+        [HttpGet("throw/{Message}")]
+        public void Throw(string Message) => throw new ApplicationException(Message);
     }
 }
