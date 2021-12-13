@@ -1,15 +1,39 @@
+using System.Reflection;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Publications.DAL.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Publications.DAL;
 using Publications.DAL.Repositories;
 using Publications.Domain.Entities;
 using Publications.Domain.Entities.Identity;
+using Publications.Interfaces;
 using Publications.Interfaces.Repositories;
+using Publications.MVC.Infrastructure.Autofac;
 using Publications.MVC.Infrastructure.Middleware;
+using Publications.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+builder.Host.ConfigureContainer<ContainerBuilder>(container =>
+{
+    container.RegisterType<DatabasePublicationManager>()
+       .As<IPublicationManager>()
+       .InstancePerLifetimeScope();
+
+    //container.RegisterAssemblyTypes(Assembly.Load("Publications.Services"))
+    //   .Where(type => type.Namespace?.StartsWith("Publications.Services") == true)
+    //   .As(type => type.GetInterfaces().FirstOrDefault(i => i.Name == "I" + type.Name)!);
+    //.AsImplementedInterfaces();
+
+    //container.RegisterModule<PublicationServicesModule>();
+    //container.RegisterModule(new PublicationServicesModule());
+    container.RegisterAssemblyModules(typeof(Program));
+
+    //container.RegisterComposite<>()
+});
 
 var services = builder.Services;
 services.AddControllersWithViews().AddRazorRuntimeCompilation();
@@ -17,7 +41,7 @@ services.AddControllersWithViews().AddRazorRuntimeCompilation();
 services.AddDbContext<PublicationsDB>(opt => opt
     .UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 services.AddTransient<IUnitOfWork, EFUnitOfWork<PublicationsDB>>();
-services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
+services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>)); // Регистрация обобщённого интерфейса. Контейнер сам подставит в <...> нужный тип!
 
 services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<PublicationsDB>()
@@ -94,6 +118,8 @@ using (var scope = app.Services.CreateAsyncScope())
 
         db.SaveChanges();
     }
+
+    //var publications_repository = scope.ServiceProvider.GetRequiredService<IRepository<Publication>>();
 }
 
 if (!app.Environment.IsDevelopment())
