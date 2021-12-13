@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Windows;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.Extensions.Hosting;
+
 using Publications.DAL.Context;
 using Publications.Interfaces;
 using Publications.Services;
+using Publications.WPF.Commands;
 using Publications.WPF.Services;
 using Publications.WPF.Services.Interfaces;
 using Publications.WPF.ViewModels;
+using Publications.WPF.Views.Windows;
 
 namespace Publications.WPF;
 
@@ -32,7 +36,10 @@ public partial class App
         services.AddScoped<IPublicationManager, DatabasePublicationManager>();
 
         services.AddScoped<MainWindowViewModel>();
+        services.AddScoped<SettingsWindowViewModel>();
+        services.AddScoped<SettingsWindow>(s => new SettingsWindow { DataContext = s.GetRequiredService<SettingsWindowViewModel>() });
         services.AddTransient<IUserDialog, UserDialog>();
+        services.AddTransient<SettingsCommand>();
     }
 
     protected override async void OnStartup(StartupEventArgs e)

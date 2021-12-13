@@ -13,6 +13,9 @@
             <MenuItem Header="Файл">
                 <MenuItem Header="Выход" Command="{Binding CloseMainWindowCommand}"/>
             </MenuItem>
+            <MenuItem Header="Сервис">
+                <MenuItem Header="Настройки" Command="{Binding SettingsCommand}"/>
+            </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem Content="К бою готов!"/>

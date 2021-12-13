@@ -16,10 +16,11 @@ public class MainWindowViewModel : ViewModel
     private readonly IPublicationManager _PublicationManager;
     private readonly IUserDialog _UserDialog;
 
-    public MainWindowViewModel(IPublicationManager PublicationManager, IUserDialog UserDialog)
+    public MainWindowViewModel(IPublicationManager PublicationManager, IUserDialog UserDialog, SettingsCommand SettingsCommand)
     {
         _PublicationManager = PublicationManager;
         _UserDialog = UserDialog;
+        _SettingsCommand = SettingsCommand;
     }
 
     private string _Title = "Главное окно программы";
@@ -80,6 +81,23 @@ public class MainWindowViewModel : ViewModel
     {
         if (_UserDialog.Question("Реально закрыть программу?", "Закрытие программы")) 
             Application.Current.MainWindow?.Close();
+    }
+
+    #endregion
+
+    #region Command SettingsCommand - Открыть настройки приложения
+
+    /// <summary>Открыть настройки приложения</summary>
+    private Command? _SettingsCommand;
+
+    /// <summary>Открыть настройки приложения</summary>
+    public ICommand SettingsCommand => _SettingsCommand
+        ??= Command.Invoke(OnSettingsCommandExecuted);
+
+    /// <summary>Логика выполнения - Открыть настройки приложения</summary>
+    private void OnSettingsCommandExecuted(object? p)
+    {
+        _UserDialog.ShowSettings();
     }
 
     #endregion
