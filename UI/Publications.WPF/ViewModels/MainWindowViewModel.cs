@@ -2,14 +2,26 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+
+using Publications.Interfaces;
 using Publications.WPF.Commands;
 using Publications.WPF.Commands.Base;
+using Publications.WPF.Services.Interfaces;
 using Publications.WPF.ViewModels.Base;
 
 namespace Publications.WPF.ViewModels;
 
 public class MainWindowViewModel : ViewModel
 {
+    private readonly IPublicationManager _PublicationManager;
+    private readonly IUserDialog _UserDialog;
+
+    public MainWindowViewModel(IPublicationManager PublicationManager, IUserDialog UserDialog)
+    {
+        _PublicationManager = PublicationManager;
+        _UserDialog = UserDialog;
+    }
+
     private string _Title = "Главное окно программы";
 
     public string Title { get => _Title; set => Set(ref _Title, value); }
@@ -61,12 +73,13 @@ public class MainWindowViewModel : ViewModel
     //public ICommand CloseMainWindowCommand => _CloseMainWindowCommand ??= Command.New(OnCloseMainWindowCommandExecuted);
     public ICommand CloseMainWindowCommand => _CloseMainWindowCommand ??= Command
        .Invoke(OnCloseMainWindowCommandExecuted)
-       .Invoke(p => MessageBox.Show("Было приятно с Вами работать!"))
+       //.Invoke(p => MessageBox.Show("Было приятно с Вами работать!"))
        .When(p => p is null);
 
-    private static void OnCloseMainWindowCommandExecuted(object? p)
+    private void OnCloseMainWindowCommandExecuted(object? p)
     {
-        Application.Current.MainWindow?.Close();
+        if (_UserDialog.Question("Реально закрыть программу?", "Закрытие программы")) 
+            Application.Current.MainWindow?.Close();
     }
 
     #endregion

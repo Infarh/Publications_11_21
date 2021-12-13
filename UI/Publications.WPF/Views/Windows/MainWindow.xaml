@@ -6,10 +6,8 @@
         xmlns:vm="clr-namespace:Publications.WPF.ViewModels"
         xmlns:l="clr-namespace:Publications.WPF"
         Title="{Binding Title}" 
-        Height="450" Width="800">
-    <Window.DataContext>
-        <vm:MainWindowViewModel/>
-    </Window.DataContext>
+        Height="450" Width="800"
+        DataContext="{Binding MainModel, Source={StaticResource Locator}}">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
