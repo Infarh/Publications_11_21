@@ -45,8 +45,8 @@ class Program
         var report = new ProductsWordReport(new(report_template))
         {
             CatalogName = "Компьютеры",
-            ProductsCount = 120,
-            CreationDate = DateTime.Now
+            CreationDate = DateTime.Now,
+            Products = products,
         };
         var file = report.Create("computers.docx");
 

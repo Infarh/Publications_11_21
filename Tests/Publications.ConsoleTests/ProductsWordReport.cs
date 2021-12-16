@@ -33,10 +33,20 @@ namespace Publications.ConsoleTests
 
             _TemplateFile.CopyTo(report_file.FullName);
 
+            var rows = Products.Select(p => new TableRowContent(new List<FieldContent>
+            {
+                new(__ProductIdField, p.Id.ToString()),
+                new(__ProductNameField, p.Name),
+                new(__ProductDescriptionField, p.Description),
+                new(__ProductPriceField, p.Price.ToString("C"))
+            })).ToArray();
+
             var content = new Content(
                 new FieldContent(__CatalogNameField, CatalogName),
                 new FieldContent(__ProductsCountField, Products.Count.ToString()),
-                new FieldContent(__CreationDateField, CreationDate.ToShortDateString())
+                new FieldContent(__CreationDateField, CreationDate.ToShortDateString()),
+                TableContent.Create(__ProductsField, rows),
+                new FieldContent(__TotalPriceField, Products.Sum(p => p.Price).ToString("C"))
                 );
 
             using var doc = new TemplateProcessor(report_file.FullName)
