@@ -1,0 +1,9 @@
+﻿<catalog Name=""@Model.CatalogName"" ProductsCount=""@Model.Products.Count"">
+    <CreationDate>@Model.CreationDate</CreationDate>
+    <Products>
+    @foreach(var product in Model.Products)
+    {
+        <Product Id=""@product.Id"" Name=""@product.Name""/>
+    }
+    </Products>
+</catalog>

@@ -29,19 +29,8 @@ id    Name    Description    Price
 {
 @product.Id    @product.Name    @product.Description    @product.Price.ToString(""C"")
 }
-";  
-        const string xml_template = @"
-<catalog Name=""@Model.CatalogName"" ProductsCount=""@Model.Products.Count"">
-    <CreationDate>@Model.CreationDate</CreationDate>
-    <Products>
-    @foreach(var product in Model.Products)
-    {
-        <Product Id=""@product.Id"" Name=""@product.Name""/>
-    }
-    </Products>
-</catalog>
 ";
-
+        var xml_template = File.ReadAllText("xml.template.txt");
         var result = Engine.Razor.RunCompile(xml_template, "ProductsReport", null, new
         {
             CatalogName,
