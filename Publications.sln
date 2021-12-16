@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Publications.Services", "Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Publications.MVC", "UI\Publications.MVC\Publications.MVC.csproj", "{89C0E48C-A13C-4858-ABCE-38F3376F2BE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publications.WPF", "UI\Publications.WPF\Publications.WPF.csproj", "{0EBA1823-7072-4221-84B4-7F6C6CCB04C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Publications.WPF", "UI\Publications.WPF\Publications.WPF.csproj", "{0EBA1823-7072-4221-84B4-7F6C6CCB04C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publications.Reports", "Common\Publications.Reports\Publications.Reports.csproj", "{59522AF3-5F13-4C65-BDEB-1696A81CE64F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,10 @@ Global
 		{0EBA1823-7072-4221-84B4-7F6C6CCB04C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EBA1823-7072-4221-84B4-7F6C6CCB04C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EBA1823-7072-4221-84B4-7F6C6CCB04C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59522AF3-5F13-4C65-BDEB-1696A81CE64F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59522AF3-5F13-4C65-BDEB-1696A81CE64F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59522AF3-5F13-4C65-BDEB-1696A81CE64F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59522AF3-5F13-4C65-BDEB-1696A81CE64F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{AA82DB2B-F502-4C70-A34A-9B159253CCF4} = {9A3113F0-0B69-4B2E-B916-461BECDDBD63}
 		{89C0E48C-A13C-4858-ABCE-38F3376F2BE5} = {6B0C7FF7-A3A1-46E8-8353-DF9242F5D8F6}
 		{0EBA1823-7072-4221-84B4-7F6C6CCB04C2} = {6B0C7FF7-A3A1-46E8-8353-DF9242F5D8F6}
+		{59522AF3-5F13-4C65-BDEB-1696A81CE64F} = {84615493-A8C4-408E-8FDA-AE99A6EC7F5C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19112F88-AA7A-42ED-B465-76748B473BE1}

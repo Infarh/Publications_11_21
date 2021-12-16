@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Publications.DAL.Context;
 using Publications.Interfaces;
+using Publications.Reports;
 using Publications.Services;
 
 namespace Publications.ConsoleTests;
@@ -41,16 +42,33 @@ class Program
            .Select(i => new Product(i, $"Product-{i}", $"Description-{i}", i * 1000))
            .ToArray();
 
-        const string report_template = "CatalogTemplate.docx";
-        var report = new ProductsWordReport(new(report_template))
-        {
-            CatalogName = "Компьютеры",
-            CreationDate = DateTime.Now,
-            Products = products,
-        };
-        var file = report.Create("computers.docx");
+        //const string report_template = "CatalogTemplate.docx";
+        //var report = new ProductsWordReport(new(report_template))
+        //{
+        //    CatalogName = "Компьютеры",
+        //    CreationDate = DateTime.Now,
+        //    Products = products,
+        //};
+        //var file = report.Create("computers.docx");
 
-        Process.Start(new ProcessStartInfo(file.FullName) { UseShellExecute = true });
+        //Process.Start(new ProcessStartInfo(file.FullName) { UseShellExecute = true });
+
+        //var report = new TestReport
+        //{
+        //    CatalogName = "Спорт",
+        //    ProductsCount = 123,
+        //};
+        //report.Create("sport.docx");
+        //Process.Start(new ProcessStartInfo("sport.docx") { UseShellExecute = true });
+
+        var razor_report = new ProductsRazorReport
+        {
+            CatalogName = "Хлеб",
+            Products = products
+        };
+
+        razor_report.Create("report.txt");
+        Process.Start(new ProcessStartInfo("report.txt") { UseShellExecute = true });
 
         // получаем главный сервис приложения и запускаем работу в нём (асинхронно).
 

@@ -2,7 +2,7 @@
 
 namespace Publications.ConsoleTests
 {
-    public class ProductsWordReport
+    public class ProductsWordReport : IProductsReport
     {
         private const string __CatalogNameField = "CatalogName";
         private const string __ProductsCountField = "ProductsCount";
