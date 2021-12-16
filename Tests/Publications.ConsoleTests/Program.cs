@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,21 @@ class Program
         using var host = Hosting;
 
         await host.StartAsync();
+
+        var products = Enumerable.Range(1, 10)
+           .Select(i => new Product(i, $"Product-{i}", $"Description-{i}", i * 1000))
+           .ToArray();
+
+        const string report_template = "CatalogTemplate.docx";
+        var report = new ProductsWordReport(new(report_template))
+        {
+            CatalogName = "Компьютеры",
+            ProductsCount = 120,
+            CreationDate = DateTime.Now
+        };
+        var file = report.Create("computers.docx");
+
+        Process.Start(new ProcessStartInfo(file.FullName) { UseShellExecute = true });
 
         // получаем главный сервис приложения и запускаем работу в нём (асинхронно).
 
