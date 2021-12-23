@@ -1,0 +1,26 @@
+﻿@model IEnumerable<AuthorViewModel>
+@{
+    ViewBag.Title = "Авторы";
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Отчество</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var author in Model)
+    {
+        <tr>
+            <td>@author.Id</td>
+            <td>@author.LastName</td>
+            <td>@author.Name</td>
+            <td>@author.Patronymic</td>
+        </tr>
+    }
+    </tbody>
+</table>

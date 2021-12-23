@@ -43,6 +43,7 @@ services.AddDbContext<PublicationsDB>(opt => opt
     .UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 services.AddTransient<IUnitOfWork, EFUnitOfWork<PublicationsDB>>();
 services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>)); // Регистрация обобщённого интерфейса. Контейнер сам подставит в <...> нужный тип!
+services.AddScoped<IRepository<Publication>, PublicationsRepository>();
 services.AddTransient<IDbInitializer, DbInitializer>();
 
 services.AddIdentity<User, Role>()
@@ -91,7 +92,7 @@ var app = builder.Build();
 await using (var scope = app.Services.CreateAsyncScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-    await db.Initialize();
+    await db.Initialize(RemoveAtStart: false);
 }
 
 if (app.Environment.IsDevelopment())
@@ -102,7 +103,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    app.UseBrowserLink();
+    //app.UseBrowserLink();
 }
 
 app.UseMiddleware<ErrorHandlerMiddleware>();

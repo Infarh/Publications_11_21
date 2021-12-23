@@ -90,6 +90,8 @@ public class DbInitializer : IDbInitializer
             return;
         }
 
+        await using var transaction = await _db.Database.BeginTransactionAsync(Cancel);
+
         var authors = Enumerable.Range(1, 5).Select(
             i => new Person
             {
@@ -111,17 +113,21 @@ public class DbInitializer : IDbInitializer
         {
             Name = $"Publication-{i}",
             Date = DateTime.Now.AddYears(-rnd.Next(5, 21)),
+            Annotation = $"Annotation-{i}",
             Authors = Enumerable.Range(1, rnd.Next(1, 4))
                .Select(_ => authors[rnd.Next(authors.Length)])
                .Distinct()
                .ToList(),
             Place = places[rnd.Next(places.Length)],
-        });
+        })
+           .ToArray();
 
         await _db.Persons.AddRangeAsync(authors, Cancel).ConfigureAwait(false);
         await _db.Places.AddRangeAsync(places, Cancel).ConfigureAwait(false);
         await _db.Publications.AddRangeAsync(publications, Cancel).ConfigureAwait(false);
 
         await _db.SaveChangesAsync(Cancel).ConfigureAwait(false);
+
+        await transaction.CommitAsync(Cancel).ConfigureAwait(false);
     }
 }

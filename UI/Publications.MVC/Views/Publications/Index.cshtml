@@ -1,0 +1,31 @@
+﻿@using System.Globalization
+@model IEnumerable<Publications.Domain.Entities.Publication>
+@{
+    ViewBag.Title = "Публикации";
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>Название</th>
+        <th>Дата</th>
+        <th>Аннотация</th>
+        <th>Авторы</th>
+        <th>Место</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var publication in Model)
+    {
+        <tr>
+            <td>@publication.Id</td>
+            <td>@publication.Name</td>
+            <td>@publication.Date.ToString("d", CultureInfo.InvariantCulture)</td>
+            <td>@publication.Annotation</td>
+            <td>@publication.Place.Name</td>
+            <td>@string.Join(", ", publication.Authors.Select(a => $"{a.LastName} {a.Name[0]}.{a.Patronymic[0]}."))</td>
+        </tr>
+    }
+    </tbody>
+</table>

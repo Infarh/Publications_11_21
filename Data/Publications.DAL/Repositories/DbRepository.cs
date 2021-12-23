@@ -12,6 +12,8 @@ public class DbRepository<T> : IRepository<T> where T : class, IEntity
 
     protected DbSet<T> Set { get; }
 
+    protected virtual IQueryable<T> Items => Set;
+
     public DbRepository(PublicationsDB db)
     {
         _db = db;
@@ -20,12 +22,13 @@ public class DbRepository<T> : IRepository<T> where T : class, IEntity
 
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken Cancel = default)
     {
-        return await Set.ToArrayAsync(Cancel).ConfigureAwait(false);
+        var result = await Items.ToArrayAsync(Cancel).ConfigureAwait(false);
+        return result;
     }
 
     public async Task<T?> GetAsync(int id, CancellationToken Cancel = default)
     {
-        return await Set.FirstOrDefaultAsync(item => item.Id == id, Cancel).ConfigureAwait(false);
+        return await Items.FirstOrDefaultAsync(item => item.Id == id, Cancel).ConfigureAwait(false);
     }
 
     public async Task<int> AddAsync(T item, CancellationToken Cancel = default)
