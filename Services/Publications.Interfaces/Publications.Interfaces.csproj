@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Publications.Domain\Publications.Domain.csproj" />
+    <ProjectReference Include="..\Publications.Interfaces.Base\Publications.Interfaces.Base.csproj" />
   </ItemGroup>
 
 </Project>

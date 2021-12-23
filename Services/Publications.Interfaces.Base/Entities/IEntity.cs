@@ -1,4 +1,4 @@
-﻿namespace Publications.Domain.Entities.Base;
+﻿namespace Publications.Interfaces.Base.Entities;
 
 public interface IEntity
 {

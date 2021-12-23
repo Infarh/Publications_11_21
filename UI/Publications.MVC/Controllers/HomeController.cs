@@ -16,19 +16,8 @@ public class HomeController : Controller
 
     public HomeController(ILogger<HomeController> Logger) => _Logger = Logger;
 
-    public async Task<IActionResult> Index(/*[FromServices] IUnitOfWork Work, [FromServices] PublicationsDB db*/)
+    public IActionResult Index()
     {
-        //using (var transaction = await Work.BeginTransaction())
-        //{
-        //    db.Persons.Add(new Person { });
-
-        //    await Work.SaveChanges();
-
-        //    await Work.CommitTransaction();
-        //}
-
-        ViewBag.Value = "Hello World!";
-
         return View();
     }
 

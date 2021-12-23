@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Publications.DAL.Context;
 using Publications.Domain.Entities.Base;
+using Publications.Interfaces.Base.Entities;
 using Publications.Interfaces.Repositories;
 
 namespace Publications.DAL.Repositories;

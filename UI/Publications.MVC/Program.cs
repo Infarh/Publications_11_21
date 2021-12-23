@@ -13,6 +13,7 @@ using Publications.Interfaces.Repositories;
 using Publications.MVC.Infrastructure.Autofac;
 using Publications.MVC.Infrastructure.Middleware;
 using Publications.Services;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -81,8 +82,8 @@ services.ConfigureApplicationCookie(opt =>
     opt.SlidingExpiration = true;
 });
 
-//services.AddEndpointsApiExplorer();
-//services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -122,14 +123,15 @@ using (var scope = app.Services.CreateAsyncScope())
     //var publications_repository = scope.ServiceProvider.GetRequiredService<IRepository<Publication>>();
 }
 
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
-    app.UseBrowserLink();
 
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
+    app.UseBrowserLink();
 }
 
 app.UseMiddleware<ErrorHandlerMiddleware>();

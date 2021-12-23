@@ -1,4 +1,5 @@
 ﻿using Publications.Domain.Entities.Base;
+using Publications.Interfaces.Base.Entities;
 
 namespace Publications.Interfaces.Repositories;
 

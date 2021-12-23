@@ -12,6 +12,8 @@ public class PublicationsDB : IdentityDbContext<User, Role, string>
 
     public DbSet<Person> Persons { get; set; }
 
+    public DbSet<Place> Places { get; set; }
+
     public PublicationsDB(DbContextOptions<PublicationsDB> Options) : base(Options)
     {
             

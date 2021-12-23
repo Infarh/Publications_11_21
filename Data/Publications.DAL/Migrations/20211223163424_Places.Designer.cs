@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Publications.DAL.Context;
 
@@ -11,9 +12,10 @@ using Publications.DAL.Context;
 namespace Publications.DAL.Migrations
 {
     [DbContext(typeof(PublicationsDB))]
-    partial class PublicationsDBModelSnapshot : ModelSnapshot
+    [Migration("20211223163424_Places")]
+    partial class Places
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
