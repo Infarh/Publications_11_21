@@ -1,6 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
+
 using AutoMapper;
+
 using Microsoft.AspNetCore.Mvc;
+
 using Publications.Domain.Entities;
 using Publications.Interfaces.Repositories;
 using Publications.MVC.Infrastructure.Mapping;
@@ -67,6 +70,8 @@ public class AuthorsController : Controller
         }
     }
 
+    public IActionResult Create() => View("Edit", new AuthorViewModel());
+
     #region Редактирование
 
     public async Task<IActionResult> Edit(int Id)
@@ -103,7 +108,10 @@ public class AuthorsController : Controller
         {
             var person = Model.FromView()!;
 
-            await _Persons.UpdateAsync(person);
+            if (person.Id == 0)
+                await _Persons.AddAsync(person);
+            else
+                await _Persons.UpdateAsync(person);
 
             return RedirectToAction(nameof(Index));
 
@@ -113,7 +121,44 @@ public class AuthorsController : Controller
             LogError(e);
             throw;
         }
-    } 
+    }
 
     #endregion
+
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            var author = await _Persons.GetAsync(id);
+            if (author is null)
+                return NotFound();
+
+            return View(author.ToView());
+        }
+        catch (Exception e)
+        {
+            LogError(e);
+            throw;
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        try
+        {
+            var author = await _Persons.GetAsync(id);
+            if (author is null)
+                return NotFound();
+
+            await _Persons.DeleteAsync(author);
+
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception e)
+        {
+            LogError(e);
+            throw;
+        }
+    }
 }

@@ -3,6 +3,8 @@
     ViewBag.Title = "Авторы";
 }
 
+<a asp-action="Create" class="btn btn-primary">Добавить</a>
+
 <table class="table">
     <thead>
     <tr>
@@ -26,7 +28,10 @@
             <td>
                 <a asp-action="Edit" asp-route-Id="@author.Id">
                     <i class="fa fa-edit"></i>ред.
-                </a>
+                </a> |
+                <form asp-action="DeleteConfirmed" asp-route-id="@author.Id">
+                    <input type="submit" value="del."/>
+                </form>
             </td>
         </tr>
     }

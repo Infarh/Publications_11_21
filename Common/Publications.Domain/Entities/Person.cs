@@ -9,4 +9,6 @@ public class Person : NamedEntity
 
     /// <summary>Отчество</summary>
     public string Patronymic { get; set; } = null!;
+
+    public override string ToString() => $"{Id} {LastName} {Name} {Patronymic}";
 }

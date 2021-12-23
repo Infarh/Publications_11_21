@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Publications.DAL.Context;
 using Publications.Domain.Entities.Base;
 using Publications.Interfaces.Base.Entities;
@@ -9,14 +10,16 @@ namespace Publications.DAL.Repositories;
 public class DbRepository<T> : IRepository<T> where T : class, IEntity
 {
     private readonly PublicationsDB _db;
+    private readonly ILogger<DbRepository<T>> _Logger;
 
     protected DbSet<T> Set { get; }
 
     protected virtual IQueryable<T> Items => Set;
 
-    public DbRepository(PublicationsDB db)
+    public DbRepository(PublicationsDB db, ILogger<DbRepository<T>> Logger)
     {
         _db = db;
+        _Logger = Logger;
         Set = _db.Set<T>();
     }
 
@@ -35,6 +38,7 @@ public class DbRepository<T> : IRepository<T> where T : class, IEntity
     {
         await Set.AddAsync(item, Cancel).ConfigureAwait(false);
         await _db.SaveChangesAsync(Cancel);
+        _Logger.LogInformation("Объект {0} добавлен в БД", item);
         return item.Id;
     }
 
@@ -42,15 +46,24 @@ public class DbRepository<T> : IRepository<T> where T : class, IEntity
     {
         _db.Entry(item).State = EntityState.Modified;
         await _db.SaveChangesAsync(Cancel).ConfigureAwait(false);
+
+        _Logger.LogInformation("Информация об объекте {0} обновлена в БД", item);
+
         return true;
     }
 
     public async Task<bool> DeleteAsync(T item, CancellationToken Cancel = default)
     {
         var entity = await GetAsync(item.Id, Cancel).ConfigureAwait(false);
-        if (entity is null) return false;
+        if (entity is null)
+        {
+            _Logger.LogInformation("Удаляемый объект {0} не найден в БД", item);
+            return false;
+        }
         _db.Entry(entity).State = EntityState.Deleted;
         await _db.SaveChangesAsync(Cancel);
+
+        _Logger.LogInformation("Объект {0} удалён из БД", item);
 
         return true;
     }

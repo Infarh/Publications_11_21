@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Publications.DAL.Context;
 using Publications.Domain.Entities;
 
@@ -10,6 +11,6 @@ namespace Publications.DAL.Repositories
            .Include(p => p.Place)
            .Include(p => p.Authors);
 
-        public PublicationsRepository(PublicationsDB db) : base(db) { }
+        public PublicationsRepository(PublicationsDB db, ILogger<PublicationsRepository> Logger) : base(db, Logger) { }
     }
 }
