@@ -43,6 +43,7 @@ services.AddDbContext<PublicationsDB>(opt => opt
     .UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 services.AddTransient<IUnitOfWork, EFUnitOfWork<PublicationsDB>>();
 services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>)); // Регистрация обобщённого интерфейса. Контейнер сам подставит в <...> нужный тип!
+services.AddTransient<IDbInitializer, DbInitializer>();
 
 services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<PublicationsDB>()
@@ -87,40 +88,10 @@ services.AddSwaggerGen();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateAsyncScope())
+await using (var scope = app.Services.CreateAsyncScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<PublicationsDB>();
-
-    await db.Database.MigrateAsync(); // Создание БД в случае её отсутствия и приведение её к последнему состоянию в плане миграций
-
-    if (!db.Publications.Any())
-    {
-        var authors = Enumerable.Range(1, 5).Select(
-            i => new Person
-            {
-                LastName = $"LastName-{i}",
-                Name = $"Name-{i}",
-                Patronymic = $"Patronymic-{i}",
-            }).ToArray();
-
-        var rnd = new Random();
-
-        var publications = Enumerable.Range(1, 50).Select(i => new Publication
-        {
-            Name = $"Publication-{i}",
-            Date = DateTime.Now.AddYears(-rnd.Next(5, 21)),
-            Authors = Enumerable.Range(1, rnd.Next(1, 4))
-               .Select(_ => authors[rnd.Next(authors.Length)])
-               .Distinct()
-               .ToList()
-        });
-
-        db.Publications.AddRange(publications);
-
-        db.SaveChanges();
-    }
-
-    //var publications_repository = scope.ServiceProvider.GetRequiredService<IRepository<Publication>>();
+    var db = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+    await db.Initialize();
 }
 
 if (app.Environment.IsDevelopment())
