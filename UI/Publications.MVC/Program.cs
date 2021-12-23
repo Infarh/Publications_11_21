@@ -87,6 +87,9 @@ services.ConfigureApplicationCookie(opt =>
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
+//services.AddAutoMapper(typeof(Program));
+services.AddAutoMapper(Assembly.GetEntryAssembly());
+
 var app = builder.Build();
 
 await using (var scope = app.Services.CreateAsyncScope())
