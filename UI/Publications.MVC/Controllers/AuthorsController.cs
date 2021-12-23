@@ -21,10 +21,7 @@ public class AuthorsController : Controller
         _Logger = Logger;
     }
 
-    private void LogError(Exception e, [CallerMemberName] string MethodName = null!)
-    {
-        _Logger.LogError(e, "Ошибка выполнении {0}", MethodName);
-    }
+    private void LogError(Exception e, [CallerMemberName] string MethodName = null!) { _Logger.LogError(e, "Ошибка выполнении {0}", MethodName); }
 
     public async Task<IActionResult> Index()
     {
@@ -88,4 +85,5 @@ public class AuthorsController : Controller
             LogError(e);
             throw;
         }
+    }
 }

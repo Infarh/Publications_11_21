@@ -10,6 +10,7 @@
         <th>Фамилия</th>
         <th>Имя</th>
         <th>Отчество</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -20,6 +21,11 @@
             <td>@author.LastName</td>
             <td>@author.Name</td>
             <td>@author.Patronymic</td>
+            <td>
+                <a asp-action="Edit" asp-route-Id="@author.Id">
+                    <i class="fa fa-edit"></i>ред.
+                </a>
+            </td>
         </tr>
     }
     </tbody>
