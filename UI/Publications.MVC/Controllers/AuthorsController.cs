@@ -71,6 +71,15 @@ public class AuthorsController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(AuthorViewModel Model)
     {
+        if(Model.LastName == "Иванов")
+            ModelState.AddModelError("LastName", "Не любим эту фамилию");
+
+        if(Model.LastName == "Петров" && Model.Name == "Пётр" && Model.Patronymic == "Петрович")
+            ModelState.AddModelError("", "Не любим этого человека");
+
+        if (!ModelState.IsValid)
+            return View(Model);
+
         try
         {
             var person = Model.FromView()!;
