@@ -50,6 +50,25 @@ public class AuthorsController : Controller
         }
     }
 
+    public async Task<IActionResult> Details(int id)
+    {
+        try
+        {
+            var author = await _Persons.GetAsync(id);
+            if (author is null)
+                return NotFound();
+
+            return View(author.ToView());
+        }
+        catch (Exception e)
+        {
+            LogError(e);
+            throw;
+        }
+    }
+
+    #region Редактирование
+
     public async Task<IActionResult> Edit(int Id)
     {
         try
@@ -71,10 +90,10 @@ public class AuthorsController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(AuthorViewModel Model)
     {
-        if(Model.LastName == "Иванов")
+        if (Model.LastName == "Иванов")
             ModelState.AddModelError("LastName", "Не любим эту фамилию");
 
-        if(Model.LastName == "Петров" && Model.Name == "Пётр" && Model.Patronymic == "Петрович")
+        if (Model.LastName == "Петров" && Model.Name == "Пётр" && Model.Patronymic == "Петрович")
             ModelState.AddModelError("", "Не любим этого человека");
 
         if (!ModelState.IsValid)
@@ -94,5 +113,7 @@ public class AuthorsController : Controller
             LogError(e);
             throw;
         }
-    }
+    } 
+
+    #endregion
 }

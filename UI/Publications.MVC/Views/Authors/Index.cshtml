@@ -17,7 +17,9 @@
     @foreach (var author in Model)
     {
         <tr>
-            <td>@author.Id</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@author.Id">@author.Id</a>
+            </td>
             <td>@author.LastName</td>
             <td>@author.Name</td>
             <td>@author.Patronymic</td>
