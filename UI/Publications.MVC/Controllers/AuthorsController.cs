@@ -125,6 +125,8 @@ public class AuthorsController : Controller
 
     #endregion
 
+    #region Удаление
+    
     public async Task<IActionResult> Delete(int id)
     {
         try
@@ -160,5 +162,7 @@ public class AuthorsController : Controller
             LogError(e);
             throw;
         }
-    }
+    } 
+
+    #endregion
 }
