@@ -16,6 +16,7 @@ namespace Publications.MVC.ViewModels
         public string Annotation { get; set; }
 
         [Display(Name = "Дата")]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
         public string Authors { get; set; }

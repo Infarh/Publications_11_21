@@ -11,22 +11,14 @@ namespace Publications.MVC.Controllers;
 public class PublicationsController : Controller
 {
     private readonly IPublicationManager _PublicationManager;
-    private readonly IRepository<Publication> _Publications;
-    private readonly IRepository<Place> _Places;
-    private readonly IRepository<Person> _Authors;
     private readonly ILogger<PublicationsController> _Logger;
 
     public PublicationsController(
         IPublicationManager PublicationManager,
-        IRepository<Publication> Publications, 
-        IRepository<Place> Places, 
-        IRepository<Person> Authors, 
         ILogger<PublicationsController> Logger)
     {
         _PublicationManager = PublicationManager;
-        _Publications = Publications;
-        _Places = Places;
-        _Authors = Authors;
+        
         _Logger = Logger;
     }
 
@@ -39,7 +31,7 @@ public class PublicationsController : Controller
     {
         try
         {
-            var publications = await _Publications.GetAllAsync();
+            var publications = await _PublicationManager.Publications.GetAllAsync();
             return View(publications);
         }
         catch (Exception e)
@@ -51,8 +43,8 @@ public class PublicationsController : Controller
 
     public async Task<IActionResult> Create()
     {
-        ViewBag.Places = (await _Places.GetAllAsync()).Select(p => p.Name);
-        ViewBag.Authors = (await _Authors.GetAllAsync()).Select(a => $"{a.LastName} {a.Name[0]}. {a.Patronymic}");
+        ViewBag.Places = (await _PublicationManager.Places.GetAllAsync()).Select(p => p.Name);
+        ViewBag.Authors = (await _PublicationManager.Authors.GetAllAsync()).Select(a => $"{a.LastName} {a.Name[0]}. {a.Patronymic}");
 
         return View(
             "Edit", new PublicationEditViewModel
@@ -63,7 +55,7 @@ public class PublicationsController : Controller
 
     public async Task<IActionResult> Edit(int id)
     {
-        var publication = await _Publications.GetAsync(id);
+        var publication = await _PublicationManager.Publications.GetAsync(id);
         if (publication is null)
             return NotFound();
 
@@ -77,8 +69,8 @@ public class PublicationsController : Controller
             Place = publication.Place.Name,
         };
 
-        ViewBag.Places = (await _Places.GetAllAsync()).Select(p => p.Name);
-        ViewBag.Authors = (await _Authors.GetAllAsync()).Select(a => $"{a.LastName} {a.Name[0]}. {a.Patronymic}");
+        ViewBag.Places = (await _PublicationManager.Places.GetAllAsync()).Select(p => p.Name);
+        ViewBag.Authors = (await _PublicationManager.Authors.GetAllAsync()).Select(a => $"{a.LastName} {a.Name[0]}. {a.Patronymic}");
 
         return View(model);
     }
@@ -91,20 +83,8 @@ public class PublicationsController : Controller
 
         if (Model.Id == 0)
         {
-            var authors = Model.Authors.Split(",");
-            var place_name = Model.Place;
+            var result = await _PublicationManager.CreateAsync(Model.Name, Model.Annotation, Model.Date, Model.Place, Model.Authors.Split(","));
 
-            var new_publication = new Publication
-            {
-                Name = Model.Name,
-                Date = Model.Date,
-                Annotation = Model.Annotation,
-                Place = null,
-                //Authors = 
-            };
-
-
-            // создать новую публикацию
         }
         else
         {

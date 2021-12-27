@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Publications.DAL.Context;
-using Publications.Domain.Entities.Base;
 using Publications.Interfaces.Base.Entities;
 using Publications.Interfaces.Repositories;
 

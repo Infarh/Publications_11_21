@@ -43,7 +43,9 @@ services.AddDbContext<PublicationsDB>(opt => opt
     .UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 services.AddTransient<IUnitOfWork, EFUnitOfWork<PublicationsDB>>();
 services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>)); // Регистрация обобщённого интерфейса. Контейнер сам подставит в <...> нужный тип!
+services.AddScoped(typeof(INamedRepository<>), typeof(DbNamedRepository<>)); // Регистрация обобщённого интерфейса. Контейнер сам подставит в <...> нужный тип!
 services.AddScoped<IRepository<Publication>, PublicationsRepository>();
+services.AddScoped<IPersonsRepository, PersonsRepository>();
 services.AddTransient<IDbInitializer, DbInitializer>();
 
 services.AddIdentity<User, Role>()
