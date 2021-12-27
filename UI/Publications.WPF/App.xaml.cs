@@ -5,8 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.Extensions.Hosting;
-
+using Publications.Domain.Entities;
 using Publications.Interfaces;
+using Publications.Interfaces.Repositories;
+using Publications.WebAPI.Clients;
 using Publications.WPF.Commands;
 using Publications.WPF.Services;
 using Publications.WPF.Services.Interfaces;
@@ -37,6 +39,10 @@ public partial class App
         services.AddScoped<SettingsWindow>(s => new SettingsWindow { DataContext = s.GetRequiredService<SettingsWindowViewModel>() });
         services.AddTransient<IUserDialog, UserDialog>();
         services.AddTransient<SettingsCommand>();
+
+        var configuration = host.Configuration;
+        services.AddHttpClient<IRepository<Person>, AuthorsClient>(client => client.BaseAddress = new(configuration["PublicationsAPI"]));
+        services.AddHttpClient<IRepository<Place>, PlacesClient>(client => client.BaseAddress = new(configuration["PublicationsAPI"]));
     }
 
     protected override async void OnStartup(StartupEventArgs e)

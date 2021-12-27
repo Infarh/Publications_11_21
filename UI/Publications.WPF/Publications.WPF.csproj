@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Publications.Domain\Publications.Domain.csproj" />
+    <ProjectReference Include="..\..\Publications.WebAPI.Clients\Publications.WebAPI.Clients.csproj" />
     <ProjectReference Include="..\..\Services\Publications.Interfaces\Publications.Interfaces.csproj" />
   </ItemGroup>
 

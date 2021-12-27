@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-
+using Publications.Domain.Entities;
 using Publications.Interfaces;
+using Publications.Interfaces.Repositories;
 using Publications.WPF.Commands;
 using Publications.WPF.Commands.Base;
 using Publications.WPF.Services.Interfaces;
@@ -14,11 +16,20 @@ namespace Publications.WPF.ViewModels;
 public class MainWindowViewModel : ViewModel
 {
     private readonly IPublicationManager _PublicationManager;
+    private readonly IRepository<Person> _PersonsRepository;
+    private readonly IRepository<Place> _PlacesRepository;
     private readonly IUserDialog _UserDialog;
 
-    public MainWindowViewModel(IPublicationManager PublicationManager, IUserDialog UserDialog, SettingsCommand SettingsCommand)
+    public MainWindowViewModel(
+        //IPublicationManager PublicationManager,
+        IRepository<Person> PersonsRepository,
+        IRepository<Place> PlacesRepository,
+        IUserDialog UserDialog,
+        SettingsCommand SettingsCommand)
     {
-        _PublicationManager = PublicationManager;
+        //_PublicationManager = PublicationManager;
+        _PersonsRepository = PersonsRepository;
+        _PlacesRepository = PlacesRepository;
         _UserDialog = UserDialog;
         _SettingsCommand = SettingsCommand;
     }
@@ -105,4 +116,38 @@ public class MainWindowViewModel : ViewModel
     private ObservableCollection<string> _Items = new();
 
     public ICollection<string> Items => _Items;
+
+    #region Command LoadPersonsCommand - Загрузка данных об авторах
+
+    /// <summary>Загрузка данных об авторах</summary>
+    private LambdaCommand? _LoadPersonsCommand;
+
+    /// <summary>Загрузка данных об авторах</summary>
+    public ICommand LoadPersonsCommand => _LoadPersonsCommand ??= new LambdaCommand(OnLoadPersonsCommandExecuted);
+
+    /// <summary>Логика выполнения - Загрузка данных об авторах</summary>
+    private async void OnLoadPersonsCommandExecuted(object? p)
+    {
+        try
+        {
+            var persons = await _PersonsRepository.GetAllAsync();
+            Persons = persons;
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show(e.Message, "Ошибка загрузки", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    #endregion
+
+    #region Persons : IEnumerable<Person> - Авторы
+
+    /// <summary>Авторы</summary>
+    private IEnumerable<Person> _Persons;
+
+    /// <summary>Авторы</summary>
+    public IEnumerable<Person> Persons { get => _Persons; private set => Set(ref _Persons, value); }
+
+    #endregion
 }

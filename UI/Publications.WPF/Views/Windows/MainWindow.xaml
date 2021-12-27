@@ -16,17 +16,21 @@
             <MenuItem Header="Сервис">
                 <MenuItem Header="Настройки" Command="{Binding SettingsCommand}"/>
             </MenuItem>
+            <MenuItem Header="Загрузка">
+                <MenuItem Header="Авторы" Command="{Binding LoadPersonsCommand}"/>
+            </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem Content="К бою готов!"/>
         </StatusBar>
         <Grid>
-            <TextBox VerticalAlignment="Top" Margin="50"
-                     Text="{Binding MessageText, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button VerticalAlignment="Center" HorizontalAlignment="Center"
-                    Padding="120,30" Content="Сообщение"
-                    Command="{Binding ShowMessageCommand}"
-                    CommandParameter="{Binding MessageText}"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Header="Авторы">
+                <ListBox ItemsSource="{Binding Persons}"/>
+            </GroupBox>
         </Grid>
     </DockPanel>
 </Window>
