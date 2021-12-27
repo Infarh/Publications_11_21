@@ -4,6 +4,10 @@
     ViewBag.Title = "Публикации";
 }
 
+<a asp-action="Create" class="btn btn-primary">Создать</a>
+
+<hr/>
+
 <table class="table">
     <thead>
     <tr>
@@ -20,7 +24,9 @@
     {
         <tr>
             <td>@publication.Id</td>
-            <td>@publication.Name</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@publication.Id">@publication.Name</a>
+            </td>
             <td>@publication.Date.ToString("d", CultureInfo.InvariantCulture)</td>
             <td>@publication.Annotation</td>
             <td>@publication.Place.Name</td>

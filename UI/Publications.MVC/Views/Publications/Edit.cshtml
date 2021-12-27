@@ -1,0 +1,51 @@
+﻿@model PublicationEditViewModel
+@{
+    ViewBag.Title = "Редактирование публикации";
+}
+
+<form asp-action="Edit" asp-route-id="@Model.Id">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    
+    <div class="row g-3">
+        
+        <div class="col-sm-6">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        
+        <div class="col-sm-6">
+            <label asp-for="Annotation" class="form-label"></label>
+            <input asp-for="Annotation" class="form-control" />
+            <span asp-validation-for="Annotation" class="text-danger"></span>
+        </div>
+        
+        <div class="col-sm-6">
+            <label asp-for="Date" class="form-label"></label>
+            <input asp-for="Date" class="form-control" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
+        
+        <div class="col-sm-6">
+            <label asp-for="Place" class="form-label"></label>
+            <input asp-for="Place" class="form-control" />
+            <span asp-validation-for="Place" class="text-danger"></span>
+        </div>
+        
+        <div class="col-sm-12">
+            <label asp-for="Authors" class="form-label"></label>
+            <input asp-for="Authors" class="form-control" />
+            <span asp-validation-for="Authors" class="text-danger"></span>
+        </div>
+           
+    </div>
+    
+    <hr class="my-4">
+
+    <button class="w-100 btn btn-primary btn-lg" type="submit">
+        Сохранить
+    </button>
+
+</form>
+
+<a asp-action="Index">К списку</a>
