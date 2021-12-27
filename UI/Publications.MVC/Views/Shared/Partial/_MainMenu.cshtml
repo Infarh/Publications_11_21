@@ -3,7 +3,7 @@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
         </li>
-        @if (User.Identity.IsAuthenticated)
+       @* @if (User.Identity.IsAuthenticated)
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Выход</a>
@@ -17,7 +17,7 @@
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Вход</a>
             </li>
-        }
+        }*@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-controller="Publications" asp-action="Index">Публикации</a>
         </li>
