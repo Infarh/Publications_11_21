@@ -1,37 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
 using Publications.Domain.Entities;
 using Publications.Interfaces.Repositories;
 
 namespace Publications.MVC.Controllers.API;
 
-[ApiController, Route("api/publications")]
-public class PublicationsApiController : ControllerBase
+[ApiController, Route("api/places")]
+public class PlacesApiController : ControllerBase
 {
-    private readonly IRepository<Publication> _Repository;
+    private readonly IRepository<Place> _Repository;
 
-    public PublicationsApiController(IRepository<Publication> Repository) { _Repository = Repository; }
+    public PlacesApiController(IRepository<Place> Repository) { _Repository = Repository; }
 
     [HttpGet]
-    public async Task<IEnumerable<Publication>> GetAllAsync()
+    public async Task<IEnumerable<Place>> GetAllAsync()
     {
         return await _Repository.GetAllAsync();
     }
 
     [HttpGet("{id}")]
-    public async Task<Publication?> GetAsync(int id)
+    public async Task<Place?> GetAsync(int id)
     {
         return await _Repository.GetAsync(id);
     }
 
     [HttpPost]
-    public async Task<int> AddAsync(Publication item)
+    public async Task<int> AddAsync(Place item)
     {
         return await _Repository.AddAsync(item);
     }
 
     [HttpPut]
-    public async Task<bool> UpdateAsync(Publication item)
+    public async Task<bool> UpdateAsync(Place item)
     {
         return await _Repository.UpdateAsync(item);
     }

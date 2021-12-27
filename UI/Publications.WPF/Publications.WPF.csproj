@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Data\Publications.DAL\Publications.DAL.csproj" />
-    <ProjectReference Include="..\..\Services\Publications.Services\Publications.Services.csproj" />
+    <ProjectReference Include="..\..\Common\Publications.Domain\Publications.Domain.csproj" />
+    <ProjectReference Include="..\..\Services\Publications.Interfaces\Publications.Interfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>
