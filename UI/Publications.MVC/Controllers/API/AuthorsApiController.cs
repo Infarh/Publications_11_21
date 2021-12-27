@@ -8,13 +8,20 @@ namespace Publications.MVC.Controllers.API;
 public class AuthorsApiController : ControllerBase
 {
     private readonly IRepository<Person> _Repository;
+    private readonly ILogger<AuthorsApiController> _Logger;
 
-    public AuthorsApiController(IRepository<Person> Repository) { _Repository = Repository; }
+    public AuthorsApiController(IRepository<Person> Repository, ILogger<AuthorsApiController> Logger)
+    {
+        _Repository = Repository;
+        _Logger = Logger;
+    }
 
     [HttpGet]
     public async Task<IEnumerable<Person>> GetAllAsync()
     {
-        return await _Repository.GetAllAsync();
+        _Logger.LogInformation("Запрос всех авторов");
+        var result = await _Repository.GetAllAsync();
+        return result;
     }
 
     [HttpGet("{id}")]

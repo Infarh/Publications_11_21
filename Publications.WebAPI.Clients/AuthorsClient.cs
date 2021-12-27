@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿//#define TEST
+
+using System.Diagnostics;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using Publications.Domain.Entities;
@@ -17,9 +19,15 @@ public class AuthorsClient : IRepository<Person>
         _Logger = Logger;
     }
 
+
+    //[Conditional("DEBUG")]
+    //private void LogMessage(string Message) => _Logger.LogInformation(Message);
+
     public async Task<IEnumerable<Person>> GetAllAsync(CancellationToken Cancel = default)
     {
-        var result = await _Client.GetFromJsonAsync<IEnumerable<Person>>("api/authors", Cancel);
+        _Logger.LogInformation("Запрос всех авторов");
+        var result = await _Client.GetFromJsonAsync<Person[]>("api/authors", Cancel);
+        _Logger.LogInformation("От сервера получено {0} авторов", result.Length);
         return result!;
     }
 
